@@ -1,7 +1,0 @@
-cflags = -Wall
-init = mkdir -p target
-
-rule cc
-    command = $init && gcc $cflags $in -o target/$out
-
-build eda: cc eda/main.cpp
