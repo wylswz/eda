@@ -32,3 +32,11 @@ mkdir build && cd build
 cmake ..
 make -j && make install
 ```
+
+
+## Build project
+```
+$ mkdir target && cd target
+$ cmake .. && cmake --build .
+
+```

@@ -11,16 +11,16 @@ namespace eda
 
     VFS::~VFS() = default;
 
-    Key VFS::cd(string const & dir) {
+    string VFS::cd(string const & dir) {
         throw (ERR_NOT_IMPLEMENTED);
     }
 
-    Key VFS::pwd() {
+    string VFS::pwd() {
         throw (ERR_NOT_IMPLEMENTED);
     }
 
-    vector<Key> VFS::ls() {
-        throw (ERR_NOT_IMPLEMENTED);
+    vector<string> VFS::ls() {
+        return this->etcd_op->list("/");
     }
 
     bool VFS::is_dir(string const & s) {
