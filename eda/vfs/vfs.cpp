@@ -6,7 +6,7 @@ using namespace std;
 namespace eda
 {
     VFS::VFS():
-    etcd_op() {
+    etcd_op {} {
     }
 
     VFS::~VFS() = default;
@@ -20,7 +20,7 @@ namespace eda
     }
 
     vector<string> VFS::ls() {
-        return this->etcd_op->list("/");
+        return this->etcd_op.list("/");
     }
 
     bool VFS::is_dir(string const & s) {

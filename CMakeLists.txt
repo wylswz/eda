@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name
 project(EDA)
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_BUILD_TYPE Debug)
 
 find_library(CPPREST_LIB cpprest)
 find_package(Boost REQUIRED COMPONENTS random system thread filesystem chrono atomic date_time regex)

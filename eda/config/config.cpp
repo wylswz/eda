@@ -1,11 +1,11 @@
 #include "eda/config/config.hpp"
+#include<iostream>
+using namespace std;
+
 
 namespace eda {
     string Config::EtcdEPs() {
-        if (this->etcd_eps.length() == 0) {
-            this->etcd_eps = getenv(ENV_ETCD_EPS);
-        }
-        return this->etcd_eps;
+        return "http://127.0.0.1:2380";
     }
 
     Config::Config(): etcd_eps() {

@@ -17,7 +17,7 @@ namespace eda
     class VFS
     {
     private:
-        ETCD_Op *etcd_op;
+        ETCD_Op etcd_op;
 
     public:
         VFS();
