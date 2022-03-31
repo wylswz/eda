@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <eda/etcd/etcd_op.hpp>
-#include "eda/vfs/path.h"
+#include "eda/vfs/path.hpp"
 
 using namespace std;
 
