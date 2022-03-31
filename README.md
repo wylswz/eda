@@ -37,6 +37,15 @@ cmake ..
 make -j && make install
 ```
 
+## Catch 2 testing framework
+
+```sh
+$ git clone https://github.com/catchorg/Catch2.git
+$ cd Catch2
+$ cmake -Bbuild -H. -DBUILD_TESTING=OFF
+$ sudo cmake --build build/ --target install
+```
+
 
 # Build project
 

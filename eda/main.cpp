@@ -3,8 +3,6 @@
 
 int main(int argc, char** argv) {
     eda::VFS vfs;
-    vector<string> ks = vfs.ls();
-    for (auto const &k : ks) {
-        cout << k << endl;
-    } 
+    vector<eda::Key> ks = vfs.ls();
+
 }

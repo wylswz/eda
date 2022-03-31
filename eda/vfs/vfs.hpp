@@ -30,21 +30,18 @@ namespace eda
     public:
         Path_Tree_Node(string const& token);
 
-        Path_Tree_Node(Path_Tree_Node const & that) noexcept {
-            token = that.token;
-            children = that.children;
-            parent = that.parent;
-        }
+        Path_Tree_Node(Path_Tree_Node const & that) noexcept;
 
-        Path_Tree_Node& operator =(Path_Tree_Node const & that) noexcept {
+        Path_Tree_Node& operator =(Path_Tree_Node const & that) noexcept;
 
-        }
+        ~Path_Tree_Node();
 
-        ~Path_Tree_Node() {
-            this->children.~vector();
-            this->token.~basic_string();
-            this->parent.reset(); // Just release ownership
-        }
+        /**
+         * @brief Insert a path to the tree
+         * 
+         * @param path full path
+         */
+        void insert_path(string const& path);
     };
 
     class VFS
@@ -62,6 +59,8 @@ namespace eda
         bool is_file(string const & s);
         bool exists(string const & s);
     };
+
+    vector<Key> aggregate(vector<string> const & keys, string const & base);
     
 }
 
