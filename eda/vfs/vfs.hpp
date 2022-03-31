@@ -10,8 +10,41 @@ using namespace std;
 
 namespace eda
 {
-    class Key
-    {
+    struct Key
+    {    
+        string key_str;
+        bool is_dir;
+
+        Key(string key_str, bool is_dir):
+        key_str{key_str} {
+            this->is_dir = is_dir;
+        }
+        
+    };
+
+    class Path_Tree_Node {
+    private:
+        string token;
+        vector<Path_Tree_Node> children;
+        shared_ptr<Path_Tree_Node> parent;
+    public:
+        Path_Tree_Node(string const& token);
+
+        Path_Tree_Node(Path_Tree_Node const & that) noexcept {
+            token = that.token;
+            children = that.children;
+            parent = that.parent;
+        }
+
+        Path_Tree_Node& operator =(Path_Tree_Node const & that) noexcept {
+
+        }
+
+        ~Path_Tree_Node() {
+            this->children.~vector();
+            this->token.~basic_string();
+            this->parent.reset(); // Just release ownership
+        }
     };
 
     class VFS
@@ -22,7 +55,7 @@ namespace eda
     public:
         VFS();
         ~VFS();
-        vector<string> ls();
+        vector<Key> ls();
         string pwd();
         string cd(string const & s);
         bool is_dir(string const & s);

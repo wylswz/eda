@@ -1,7 +1,18 @@
 #include "eda/vfs/vfs.hpp"
 #include "eda/core/errors.hpp"
 
+#define SPLITTER '/'
+
 using namespace std;
+
+
+namespace eda {
+    Path_Tree_Node::Path_Tree_Node(string const& token):
+    token{token},children{},parent{} {
+        parent = nullptr;
+    }
+}
+
 
 namespace eda
 {
@@ -19,8 +30,10 @@ namespace eda
         throw (ERR_NOT_IMPLEMENTED);
     }
 
-    vector<string> VFS::ls() {
-        return this->etcd_op.list("/");
+    vector<Key> VFS::ls() {
+        //todo: get prefix from context
+        vector<string> keys = this->etcd_op.list("/");
+        return aggregate(keys, "/");
     }
 
     bool VFS::is_dir(string const & s) {
@@ -33,6 +46,20 @@ namespace eda
 
     bool VFS::exists(string const & s) {
         throw (ERR_NOT_IMPLEMENTED);
+    }
+
+    vector<Key> aggregate(vector<string> const & keys, string const & base) {
+        string new_base(base);
+        if (!*base.end() == SPLITTER) {
+            new_base.push_back(SPLITTER);
+        }
+        vector<Key> res;
+        for (auto const & k : keys) {
+            if (k == new_base) {
+                continue;
+            }
+        }
+        return res;
     }
 
 
