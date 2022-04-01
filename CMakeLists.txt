@@ -10,7 +10,6 @@ find_package(Boost REQUIRED COMPONENTS random system thread filesystem chrono at
 find_package(OpenSSL 1.0.0 REQUIRED)
 find_package(etcd-cpp-api)
 
-
 add_library(config ./eda/config/config.cpp)
 target_include_directories(config PUBLIC
     ${PROJECT_SOURCE_DIR}
@@ -53,5 +52,16 @@ target_link_libraries(eda
 
 
 target_include_directories(eda PUBLIC
+    ${PROJECT_SOURCE_DIR}
+)
+
+
+# Test
+find_package(Catch2 3 REQUIRED)
+add_executable(testcase ${PROJECT_SOURCE_DIR}/eda/tests/tests.cpp)
+target_link_libraries(testcase 
+    PRIVATE Catch2::Catch2WithMain
+    vfs)
+target_include_directories(testcase PUBLIC
     ${PROJECT_SOURCE_DIR}
 )

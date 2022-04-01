@@ -13,7 +13,7 @@ namespace eda
     }
 
 
-    Path_Tree_Node::Path_Tree_Node(Path_Tree_Node const &that)
+    Path_Tree_Node::Path_Tree_Node(Path_Tree_Node const &that) noexcept
     {
         token = that.token;
         children = that.children;

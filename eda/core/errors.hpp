@@ -5,27 +5,34 @@
 #define ERR_NOT_IMPLEMENTED 10000
 #define ERR_ETCD_ERR 10001
 
+#define ERR_IDX_OUT_OF_BOUND 20000
+#define UNINITIALIZED_ACCESS 20001
+
 #include <string>
 using namespace std;
 
-/**
- * @brief This is the base class for all eda exceptions
- * 
- */
-class EDA_Exception : std::exception
+namespace eda
 {
-
-private:
-    int code;
-    string desc;
-
-public:
-    EDA_Exception(int code, string const &desc) : desc{desc},
-                                                  code{code}
+    /**
+     * @brief This is the base class for all eda exceptions
+     *
+     */
+    class EDA_Exception : std::exception
     {
-    }
 
-    ~EDA_Exception() = default;
-};
+    private:
+        int code;
+        string desc;
+
+    public:
+        EDA_Exception(int code, string const &desc) : desc{desc},
+                                                      code{code}
+        {
+        }
+
+        ~EDA_Exception() = default;
+    };
+
+}
 
 #endif
