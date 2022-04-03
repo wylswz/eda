@@ -24,3 +24,21 @@ TEST_CASE("Test path parser", "[pathparser]") {
     REQUIRE_THROWS_AS(p.peek(), eda::EDA_Exception);
 
 }
+
+TEST_CASE("Test Path Tree Node", "[path_tree_node]") {
+    // Test constructor
+    eda::Path_Tree_Node n("token");
+    REQUIRE(n.get_parent() == nullptr);
+
+    eda::Path_Tree_Node parent("root");
+    eda::Path_Tree_Node child_1("asd");
+    eda::Path_Tree_Node child_2("zxc");
+
+    eda::Path_Tree_Node n2("token", parent);
+
+    // Test copy constructor
+    eda::Path_Tree_Node n3 = n2;
+    REQUIRE(n3.get_parent() == n2.get_parent());
+    
+}
+

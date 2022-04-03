@@ -26,9 +26,12 @@ namespace eda
     private:
         string token;
         vector<Path_Tree_Node> children;
-        shared_ptr<Path_Tree_Node> parent;
+        Path_Tree_Node* parent;
     public:
+
         Path_Tree_Node(string const& token);
+
+        Path_Tree_Node(string const& token, Path_Tree_Node & parent);
 
         Path_Tree_Node(Path_Tree_Node const & that) noexcept;
 
@@ -36,12 +39,20 @@ namespace eda
 
         ~Path_Tree_Node();
 
+        void swap(Path_Tree_Node& that);
+
         /**
          * @brief Insert a path to the tree
          * 
          * @param path full path
          */
         void insert_path(string const& path);
+
+        Path_Tree_Node* get_parent();
+
+        bool exist_child(string const& child_token);
+
+        void insert_child(Path_Tree_Node& child);
     };
 
     class VFS
