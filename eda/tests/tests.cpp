@@ -8,9 +8,8 @@
 
 using namespace std;
 
-
-
-TEST_CASE("Test path parser", "[pathparser]") {
+TEST_CASE("Test path parser", "[pathparser]")
+{
     eda_path::P_Parser p("/a/b/c");
 
     REQUIRE(p.has_next() == true);
@@ -24,10 +23,10 @@ TEST_CASE("Test path parser", "[pathparser]") {
 
     p = eda_path::P_Parser("/a");
     REQUIRE_THROWS_AS(p.peek(), eda::EDA_Exception);
-
 }
 
-TEST_CASE("Test Path Tree Node", "[path_tree_node]") {
+TEST_CASE("Test Path Tree Node", "[path_tree_node]")
+{
     // Test constructor
     eda::Path_Tree_Node n("token");
     REQUIRE(n.get_parent() == nullptr);
@@ -44,18 +43,17 @@ TEST_CASE("Test Path Tree Node", "[path_tree_node]") {
 
     eda::Path_Tree_Node n3c("n3c");
     n3.insert_child(n3c);
-    
-    cout<<n3.children.size() << "|"<<n2.children.size()<<endl;
 
-    eda::Path_Tree_Node& n3c_find = n3.find("n3c");
+    cout << n3.children.size() << "|" << n2.children.size() << endl;
+
+    eda::Path_Tree_Node &n3c_find = n3.find("n3c");
     REQUIRE(!n3c_find.is_null_node());
 
     n3c_find = n2.find("n3c");
     REQUIRE(n3c_find.is_null_node());
-
-    
 }
 
-TEST_CASE("Test insert path", "[insert_path]") {
+TEST_CASE("Test insert path", "[insert_path]")
+{
     eda::Path_Tree_Node root();
 }
