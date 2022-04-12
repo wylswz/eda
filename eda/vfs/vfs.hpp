@@ -23,11 +23,18 @@ namespace eda
     };
 
     class Path_Tree_Node {
+#ifdef UNITTEST
+    public:
+#else
     private:
+#endif
         string token;
+        bool root;
         vector<Path_Tree_Node> children;
         Path_Tree_Node* parent;
     public:
+
+        Path_Tree_Node();
 
         Path_Tree_Node(string const& token);
 
@@ -50,10 +57,14 @@ namespace eda
 
         Path_Tree_Node* get_parent();
 
-        bool exist_child(string const& child_token);
+        Path_Tree_Node& find(string const& child_token);
 
         void insert_child(Path_Tree_Node& child);
+
+        bool is_null_node();
+
     };
+
 
     class VFS
     {
