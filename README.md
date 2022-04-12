@@ -49,7 +49,20 @@ $ sudo cmake --build build/ --target install
 
 # Build project
 
+## Build executable
+
+Currently nothing is implemented in executable, but you can still build it
+
 ```
 $ mkdir target && cd target
 $ cmake .. && cmake --build .
 ```
+
+## Test
+```
+$ mkdir target && cd target
+$ cmake..
+$ make testcase
+$ ./testcase
+```
+
