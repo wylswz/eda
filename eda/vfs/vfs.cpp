@@ -1,5 +1,6 @@
 #include "eda/vfs/vfs.hpp"
 #include "eda/core/errors.hpp"
+#include "eda/core/functools.hpp"
 
 #define SPLITTER '/'
 
@@ -126,7 +127,8 @@ namespace eda
                 // Create a child and insert if not exists
                 Path_Tree_Node _tmp(token);
                 into.insert_child(_tmp);
-                return _do_insert(p, _tmp);
+                // Need to find again because
+                return _do_insert(p, into.find(token));
             }
             return _do_insert(p, child);
         }
@@ -140,6 +142,15 @@ namespace eda
     {
         eda_path::P_Parser p(path);
         _do_insert(p, *this);
+    }
+
+    string Path_Tree_Node::get_token() {
+        return this->token;
+    }
+
+    vector<string> Path_Tree_Node::list_children_token() {
+        function<string (eda::Path_Tree_Node)> token_getter = [](Path_Tree_Node n) {return n.get_token();};
+        return eda_core::map_to(this->children, token_getter);
     }
 
 }

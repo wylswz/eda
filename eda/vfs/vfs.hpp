@@ -62,6 +62,10 @@ namespace eda
         void insert_child(Path_Tree_Node &child);
 
         bool is_null_node();
+
+        vector<string> list_children_token();
+
+        string get_token();
     };
 
     class VFS

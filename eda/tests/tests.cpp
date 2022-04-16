@@ -4,6 +4,7 @@
 #include "eda/vfs/path.hpp"
 #include "eda/core/std.h"
 #include "eda/core/errors.hpp"
+#include "eda/tests/test_utils.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 using namespace std;
@@ -55,5 +56,16 @@ TEST_CASE("Test Path Tree Node", "[path_tree_node]")
 
 TEST_CASE("Test insert path", "[insert_path]")
 {
-    eda::Path_Tree_Node root();
+    eda::Path_Tree_Node root;
+    root.insert_path("/a/b/c");
+    root.insert_path("/a/b/d");
+    root.insert_path("/");
+    vector<string> l1 = root.list_children_token();
+    REQUIRE(l1 == vector<string>{"a"});
+
+    vector<string> l2 = root.children[0].list_children_token();
+    REQUIRE(l2 == vector<string>{"b"});
+
+    vector<string> l3 = root.children[0].children[0].list_children_token();
+    REQUIRE(l3 == vector<string> {"c", "d"});
 }
