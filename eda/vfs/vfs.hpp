@@ -15,10 +15,8 @@ namespace eda
         string key_str;
         bool is_dir;
 
-        Key(string key_str, bool is_dir) : key_str{key_str}
-        {
-            this->is_dir = is_dir;
-        }
+        Key();
+        Key(string key_str, bool is_dir);
     };
 
     class Path_Tree_Node
@@ -64,6 +62,8 @@ namespace eda
         bool is_null_node();
 
         vector<string> list_children_token();
+
+        vector<Path_Tree_Node> list_children();
 
         string get_token();
     };

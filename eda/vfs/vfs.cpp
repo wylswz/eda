@@ -9,6 +9,11 @@ using namespace std;
 namespace eda
 {
 
+    Key::Key(): key_str{}, is_dir{false} {}
+    Key::Key(string key_str, bool is_dir ) : key_str{key_str}, is_dir{is_dir}
+    {
+    }
+
     /**
      * @brief Indicates null node
      *
@@ -149,8 +154,12 @@ namespace eda
     }
 
     vector<string> Path_Tree_Node::list_children_token() {
-        function<string (eda::Path_Tree_Node)> token_getter = [](Path_Tree_Node n) {return n.get_token();};
+        function<string (eda::Path_Tree_Node&)> token_getter = [](Path_Tree_Node& n) {return n.get_token();};
         return eda_core::map_to(this->children, token_getter);
+    }
+
+    vector<Path_Tree_Node> Path_Tree_Node::list_children() {
+        return this->children;
     }
 
 }
@@ -173,11 +182,24 @@ namespace eda
         throw(ERR_NOT_IMPLEMENTED);
     }
 
+    Path_Tree_Node construct_path_tree(vector<string> path) {
+        Path_Tree_Node root;
+        for (string const & s : path) {
+            root.insert_path(s);
+        }
+        return root;
+    }
+
     vector<Key> VFS::ls()
     {
         // todo: get prefix from context
         vector<string> keys = this->etcd_op.list("/");
-        return aggregate(keys, "/");
+        Path_Tree_Node n = construct_path_tree(keys);
+        function<Key (Path_Tree_Node&)> mapper = [](Path_Tree_Node& n) {
+            Key k(n.get_token(), n.list_children().size() > 0);
+            return k;
+        };
+        return eda_core::map_to(n.list_children(), mapper);
     }
 
     bool VFS::is_dir(string const &s)
@@ -193,12 +215,6 @@ namespace eda
     bool VFS::exists(string const &s)
     {
         throw(ERR_NOT_IMPLEMENTED);
-    }
-
-    vector<Key> aggregate(vector<string> const &keys, string const &base)
-    {
-        vector<Key> res;
-        return res;
     }
 
 } // namespace eds

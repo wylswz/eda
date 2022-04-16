@@ -9,7 +9,7 @@ using namespace std;
 namespace eda_core
 {
     template <typename U, typename V>
-    vector<V> map_to(vector<U, allocator<U>> src, function<V (U)> mapper)
+    vector<V> map_to(vector<U> src, function<V (U&)> mapper)
     {
         vector<V> res(src.size());
         for (int i=0; i<src.size(); ++i) {
