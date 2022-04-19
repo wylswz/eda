@@ -9,7 +9,8 @@ using namespace std;
 namespace eda_core
 {
 
-    Y_Object auto_scalar_type(char *val, int len) {
+    Y_Object auto_scalar_type(char *val, int len)
+    {
         return Y_Object{};
     }
 
@@ -23,14 +24,7 @@ namespace eda_core
 
         yaml_parser_set_input_file(&parser, input);
 
-        /*
-         * if 0, expecting a key
-         * if 1, expecting a value 
-         */
-        int kv_state = 0;
-        string key;
-        stack<Y_Object> stack;
-
+        stack<Y_Frame> stack;
 
         while (!done)
         {
@@ -50,31 +44,48 @@ namespace eda_core
                 break;
             }
             case yaml_event_type_e::YAML_SEQUENCE_START_EVENT:
-            cout<<"seq start"<<endl;
+                cout << "seq start" << endl;
                 break;
             case yaml_event_type_e::YAML_SEQUENCE_END_EVENT:
-            cout<<"seq end"<<endl;
+                cout << "seq end" << endl;
                 break;
+
+            /**
+             * @brief When a map is encountered, a new Y_Map is created and add to current container
+             * - if current container is sequence, then push to back
+             * - if current container is map, then put to corresponding key
+             *
+             * As a container, the new map should be pushed to stack
+             */
             case yaml_event_type_e::YAML_MAPPING_START_EVENT:
-                Y_Map new_map{};
-                if (stack.empty()) {
-                } else {
-                    if (eda_core::instance_of<Y_Seq>(stack.top())) {
-                        
+            {
+                Y_Frame frame{0, "", Y_Map{}};
+                if (stack.empty())
+                {
+                }
+                else
+                {
+                    if (eda_core::instance_of<Y_Seq>(stack.top()))
+                    {
+
                         // push back an empty Y_Map
-                        stack.push(new_map);
-                    } else if (eda_core::instance_of<Y_Map>(stack.top())) {
+                        stack.push(frame);
+                    }
+                    else if (eda_core::instance_of<Y_Map>(stack.top()))
+                    {
                         // put to key
                     }
                 }
-                stack.push(new_map);
+                stack.push(frame);
                 break;
+            }
+
             case yaml_event_type_e::YAML_MAPPING_END_EVENT:
                 stack.pop();
-            cout<<"mapping end"<<endl;
+                cout << "mapping end" << endl;
                 break;
             case yaml_event_type_e::YAML_DOCUMENT_END_EVENT:
-                done=true;
+                done = true;
             default:
                 break;
             }

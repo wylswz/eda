@@ -15,7 +15,7 @@ namespace eda_core {
     };
 
     struct Y_Err : public Y_Object {
-        
+
     };
 
     struct Y_Int : public Y_Object {
@@ -45,6 +45,21 @@ namespace eda_core {
      * @return Y_Object 
      */
     Y_Object parse_yaml(char const * path);
+
+    struct Y_Frame {
+
+        /*
+         * if 0, expecting a key
+         * if 1, expecting a value
+         */
+        int kv_state;
+
+        /**
+         * when lv_state == 0, the next scalar encountered is used as key
+         */
+        string key;
+        Y_Object data;
+    };
 
 
 }
