@@ -5,6 +5,8 @@
 #include "eda/core/std.h"
 #include "eda/core/errors.hpp"
 #include "eda/tests/test_utils.hpp"
+#include "eda/core/eda_type_traits.h"
+#include "eda/core/config_parser.h"
 #include <catch2/catch_test_macros.hpp>
 
 using namespace std;
@@ -67,5 +69,26 @@ TEST_CASE("Test insert path", "[insert_path]")
     REQUIRE(l2 == vector<string>{"b"});
 
     vector<string> l3 = root.children[0].children[0].list_children_token();
-    REQUIRE(l3 == vector<string> {"c", "d"});
+    REQUIRE(l3 == vector<string>{"c", "d"});
+}
+
+TEST_CASE("Test type trait", "[Type_trait]")
+{
+    eda_core::Y_Float f;
+    eda_core::Y_Err e;
+    eda_core::Y_Object o;
+    REQUIRE(eda_core::instance_of<eda_core::Y_Float>(f) == true);
+    REQUIRE(eda_core::instance_of<eda_core::Y_Err>(e));
+    REQUIRE(!eda_core::instance_of<eda_core::Y_Err>(f));
+    REQUIRE(eda_core::instance_of<eda_core::Y_Object>(e));
+}
+
+TEST_CASE("Test yaml parsing", "[Yaml parsing]")
+{
+#ifdef TEST_ROOT
+#define concat(F, S) F S
+    cout << concat(TEST_ROOT, "/test.yaml") << endl;
+    eda_core::parse_yaml(concat(TEST_ROOT, "/test.yaml"));
+
+#endif
 }

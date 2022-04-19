@@ -7,9 +7,9 @@ using namespace std;
 
 namespace eda {
     ETCD_Op::ETCD_Op():
-    client (Config().EtcdEPs(), "pick_first")
+    client (eda_config::Config().EtcdEPs(), "pick_first")
     {
-        cout<<"Initializing with eps: "<<Config().EtcdEPs()<<endl;
+        cout<<"Initializing with eps: "<<eda_config::Config().EtcdEPs()<<endl;
         
     }
 

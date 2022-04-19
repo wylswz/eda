@@ -1,5 +1,11 @@
 # Dependencies
 
+## libyaml
+
+```
+$ apt install libyaml-dev
+```
+
 ## Boost, ssl
 ```
 apt-get install libboost-all-dev libssl-dev

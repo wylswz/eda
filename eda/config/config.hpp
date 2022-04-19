@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace eda
+namespace eda_config
 {
     class Config
     {
@@ -17,8 +17,6 @@ namespace eda
         Config();
         ~Config();
     };
-    
-
     
 }
 
