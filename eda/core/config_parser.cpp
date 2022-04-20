@@ -39,6 +39,24 @@ namespace eda_core
     Y_Map::Y_Map(Y_Object& src):Y_Object(src) {}
     Y_Map::Y_Map(Y_Object&& src):Y_Object(src){}
 
+    shared_ptr<Y_Object> Y_Map::get(string const& key) {
+        if (this->map.find(key) == this->map.end()) {
+            return shared_ptr<Y_Object>(nullptr);
+        }
+        return this->map[key];
+    }
+
+    shared_ptr<Y_Object> Y_Map::put(string const& key, Y_Object& val) {
+        shared_ptr<Y_Object> ptr = std::make_shared<Y_Object>(val);
+        auto it = this->map.emplace(key, ptr);
+        it.first->second = ptr;
+        return ptr;
+    }
+
+    shared_ptr<Y_Object> Y_Map::put(string const& key, Y_Object&& val) {
+        Y_Object lval = val;
+        return this->put(key, lval); 
+    }
 
     /**
      * @brief Sequence

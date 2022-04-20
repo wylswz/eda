@@ -63,6 +63,31 @@ namespace eda_core
         Y_Map(Y_Object &src);
         Y_Map(Y_Object &&src);
         Y_Map();
+
+        /**
+         * @brief Put val to map as a shared pointer and return the shared pointer
+         * 
+         * @param key 
+         * @param val 
+         */
+        shared_ptr<Y_Object> put(string const& key, Y_Object& val);
+
+        /**
+         * @brief Rval reference version of put. Move the rval ref, then invoke normal put
+         * 
+         * @param key 
+         * @param val 
+         * @return shared_ptr<Y_Object> 
+         */
+        shared_ptr<Y_Object> put(string const& key, Y_Object&& val);
+
+        /**
+         * @brief Get a value by key
+         * 
+         * @param key 
+         * @return shared_ptr<Y_Object> shared_prt(nullptr) is returned if not found
+         */
+        shared_ptr<Y_Object> get(string const& key);
     };
 
     /**

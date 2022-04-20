@@ -87,6 +87,24 @@ TEST_CASE("Test type trait", "[Type_trait]")
     REQUIRE(eda_core::p_instance_of<eda_core::Y_Map>(p.get()));
 }
 
+TEST_CASE("Test Y_Map", "[Y_Map]") {
+    using namespace eda_core;
+    Y_Object yo;
+    Y_Map ymap(std::move(yo));
+    ymap.put("a", Y_String("b"));
+    ymap.put("a", Y_String("c"));
+    REQUIRE(ymap.get("a").get()->token == "c");
+
+    /**
+     * ymap is copy constructed
+     * therefore yo's data is unchanged
+     */
+    REQUIRE(yo.map.size() == 0);
+    // copy constructed
+    yo = ymap;
+    REQUIRE(yo.map.size() == 1);
+}
+
 TEST_CASE("Test yaml parsing", "[Yaml parsing]")
 {
     eda_core::Y_Object yo;
