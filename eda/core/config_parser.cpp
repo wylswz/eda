@@ -143,16 +143,17 @@ namespace eda_core
 
         if (eda_core::p_instance_of<Y_Map>(this->data.get()))
         {
+
             if (this->expecting_key())
             {
                 // expecting a key, so set the token as key
-                cout<<"Setting key: "<<key<<endl;
+                // cout<<"Setting key: "<<token<<endl;
                 this->key = token;
             }
             else
             {
                 // expecting a value
-                cout<<"Puting: "<<key << " -> " << token << endl;;
+                // cout<<"Puting: "<<key << " -> " << token << endl;
                 this->data.get()->map.emplace(key, make_shared<Y_String>(Y_String{token}));
             }
         }
@@ -166,6 +167,6 @@ namespace eda_core
 
     bool Y_Frame::expecting_key()
     {
-        return this->kv_state;
+        return this->kv_state==0;
     }
 }

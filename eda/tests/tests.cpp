@@ -93,9 +93,13 @@ TEST_CASE("Test yaml parsing", "[Yaml parsing]")
 #ifdef TEST_ROOT
 #define concat(F, S) F S
     cout << concat(TEST_ROOT, "/test.yaml") << endl;
-    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/test.yaml"));
+    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/map.yaml"));
 
 #endif
-    cout<<yo.map.size()<<endl;
-
+    REQUIRE(yo.map.size() == 2);
+    eda_core::Y_Object *b = yo.map["b"].get();
+    REQUIRE(b != nullptr);
+    REQUIRE(b->map.size() == 3);
+    REQUIRE(b->map["b1"].get()->token == "1");
+    REQUIRE(b->map["b3"].get()->map.size() == 2);
 }
