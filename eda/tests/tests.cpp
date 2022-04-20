@@ -77,18 +77,25 @@ TEST_CASE("Test type trait", "[Type_trait]")
     eda_core::Y_Float f;
     eda_core::Y_Err e;
     eda_core::Y_Object o;
-    REQUIRE(eda_core::instance_of<eda_core::Y_Float>(f) == true);
-    REQUIRE(eda_core::instance_of<eda_core::Y_Err>(e));
-    REQUIRE(!eda_core::instance_of<eda_core::Y_Err>(f));
-    REQUIRE(eda_core::instance_of<eda_core::Y_Object>(e));
+    REQUIRE(eda_core::instance_of<eda_core::Y_Float>(&f) == true);
+    REQUIRE(eda_core::instance_of<eda_core::Y_Err>(&e));
+    REQUIRE(!eda_core::instance_of<eda_core::Y_Err>(&f));
+    REQUIRE(eda_core::instance_of<eda_core::Y_Object>(&e));
+
+    unique_ptr<eda_core::Y_Object> p = make_unique<eda_core::Y_Map>(eda_core::Y_Map{});
+    REQUIRE(!eda_core::instance_of<eda_core::Y_Map>(p.get()));
+    REQUIRE(eda_core::p_instance_of<eda_core::Y_Map>(p.get()));
 }
 
 TEST_CASE("Test yaml parsing", "[Yaml parsing]")
 {
+    eda_core::Y_Object yo;
 #ifdef TEST_ROOT
 #define concat(F, S) F S
     cout << concat(TEST_ROOT, "/test.yaml") << endl;
-    eda_core::parse_yaml(concat(TEST_ROOT, "/test.yaml"));
+    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/test.yaml"));
 
 #endif
+    cout<<yo.map.size()<<endl;
+
 }
