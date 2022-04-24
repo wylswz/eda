@@ -71,6 +71,10 @@ namespace eda_core
     Y_Seq::Y_Seq(Y_Object& src):Y_Object(src){}
     Y_Seq::Y_Seq(Y_Object&& src):Y_Object(src){}
 
+    shared_ptr<Y_Object> Y_Seq::operator[](int i) {
+        return this->seq[i];
+    }
+
     Y_Object auto_scalar_type(char *val, int len)
     {
         return Y_Object{};
@@ -106,11 +110,30 @@ namespace eda_core
                 stk.top().next_token(s);
                 break;
             }
-            case yaml_event_type_e::YAML_SEQUENCE_START_EVENT:
-                break;
-            case yaml_event_type_e::YAML_SEQUENCE_END_EVENT:
-                break;
+            /**
+             * @brief When a sequence is encountered, a new Y_Seq is created and added to current container
+             * 
+             */
+            case yaml_event_type_e::YAML_SEQUENCE_START_EVENT: 
+            {
+                Y_Frame frame_seq{0, "", std::make_shared<Y_Seq>(Y_Seq{})};
+                if (stk.empty()) {
 
+                } else {
+                    stk.top().next_container(frame_seq.data);
+                }
+                stk.push(frame_seq);
+                break;
+            }
+            case yaml_event_type_e::YAML_SEQUENCE_END_EVENT:
+            {
+                if (stk.empty()) {
+                    return Y_Err{};
+                }
+                last_pop = stk.top();
+                stk.pop();
+                break;
+            }
             /**
              * @brief When a map is encountered, a new Y_Map is created and add to current container
              * - if current container is sequence, then push to back
@@ -120,35 +143,35 @@ namespace eda_core
              */
             case yaml_event_type_e::YAML_MAPPING_START_EVENT:
             {
-                Y_Frame frame{0, "", std::make_shared<Y_Map>(Y_Map{})};
+                Y_Frame frame_map{0, "", std::make_shared<Y_Map>(Y_Map{})};
                 if (stk.empty())
                 {
                 }
                 else
                 {
-                    if (eda_core::p_instance_of<Y_Seq>(stk.top().data.get()))
-                    {
-
-                        // push back an empty Y_Map
-                        stk.top().data.get()->seq.push_back(frame.data);
-                        
-                    }
-                    else if (eda_core::p_instance_of<Y_Map>(stk.top().data.get()))
-                    {
-                        // put to key
-                        stk.top().data.get()->map.emplace(stk.top().key, frame.data);
-                    }
+                    stk.top().next_container(frame_map.data);
                 }
-                stk.push(frame);
+                stk.push(frame_map);
                 break;
             }
 
             case yaml_event_type_e::YAML_MAPPING_END_EVENT:
+            {
+                if (stk.empty()) {
+                    return Y_Err{};
+                }
                 last_pop = stk.top();
                 stk.pop();
                 break;
+            }
             case yaml_event_type_e::YAML_DOCUMENT_END_EVENT:
+            {
+                if (!stk.empty()) {
+                    return Y_Err{};
+                }
                 done = true;
+                break;
+            }
             default:
                 break;
             }
@@ -181,7 +204,30 @@ namespace eda_core
             // Only flip when current frame is map container
             this->kv_state = 1 - this->kv_state;
         }
+
+        if (eda_core::p_instance_of<Y_Seq>(this->data.get())){
+            this->data.get()->seq.push_back(make_shared<Y_String>(token));
+        }
     }
+
+    void Y_Frame::next_container(shared_ptr<Y_Object> obj) {
+       if (eda_core::p_instance_of<Y_Seq>(this->data.get()))
+        {
+
+            // push back an empty Y_Map
+            this->data.get()->seq.push_back(obj);
+            
+        }
+        else if (eda_core::p_instance_of<Y_Map>(this->data.get()))
+        {
+            // put to key
+            this->data.get()->map.emplace(this->key, obj);
+            // reset to 0
+            this->kv_state = 0;
+        }
+    }
+
+
 
     bool Y_Frame::expecting_key()
     {

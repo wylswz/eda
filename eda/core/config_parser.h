@@ -54,6 +54,8 @@ namespace eda_core
         Y_Seq(Y_Object &src);
         Y_Seq(Y_Object &&src);
         Y_Seq();
+
+        shared_ptr<Y_Object> operator [](int i);
     };
 
     class Y_Map : public Y_Object
@@ -114,6 +116,7 @@ namespace eda_core
         shared_ptr<Y_Object> data;
 
         void next_token(string token);
+        void next_container(shared_ptr<Y_Object> obj);
         bool expecting_key();
     };
 

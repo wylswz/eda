@@ -117,7 +117,30 @@ TEST_CASE("Test yaml parsing", "[Yaml parsing]")
     REQUIRE(yo.map.size() == 2);
     eda_core::Y_Object *b = yo.map["b"].get();
     REQUIRE(b != nullptr);
-    REQUIRE(b->map.size() == 3);
+    REQUIRE(b->map.size() == 4);
     REQUIRE(b->map["b1"].get()->token == "1");
     REQUIRE(b->map["b3"].get()->map.size() == 2);
+}
+
+
+TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]") {
+    eda_core::Y_Object yo;
+    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/maplist.yaml"));
+    eda_core::Y_Map a{*yo.map["a"]};
+    eda_core::Y_Seq b{*a.get("b").get()};
+    
+    eda_core::Y_Map b0{*b[0].get()};
+    eda_core::Y_Map b1{*b[1].get()};
+    eda_core::Y_Map b2{*b[2].get()};
+
+    REQUIRE(b0.get("c").get()->token == "1");
+    REQUIRE(b1.get("d").get()->token == "2");
+    REQUIRE(b2.get("e").get()->map["f"].get()->map["g"].get()->token == "3");
+
+}
+
+TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]") {
+    eda_core::Y_Object yo;
+    // yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list.yaml"));
+    // eda_core::Y_Seq s{yo};
 }
