@@ -141,6 +141,6 @@ TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]") {
 
 TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]") {
     eda_core::Y_Object yo;
-    // yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list.yaml"));
-    // eda_core::Y_Seq s{yo};
+    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list.yaml"));
+    eda_core::Y_Seq s{yo};
 }
