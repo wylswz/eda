@@ -1,4 +1,5 @@
 #define UNITTEST
+#define concat(F, S) F S
 
 #include "eda/vfs/vfs.hpp"
 #include "eda/vfs/path.hpp"
@@ -129,7 +130,6 @@ TEST_CASE("Test yaml parsing", "[Yaml parsing]")
 {
     eda_core::Y_Object yo;
 #ifdef TEST_ROOT
-#define concat(F, S) F S
     cout << concat(TEST_ROOT, "/test.yaml") << endl;
     yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/map.yaml"));
 
