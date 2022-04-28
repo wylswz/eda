@@ -12,11 +12,17 @@
 
 using namespace std;
 
+/*
+    操他妈死逼的还要封到什么时候
+    每天他妈操逼的核酸核酸，除了核酸就只会满嘴喷屎
+    王八蛋，全家死光光
+*/
+
 TEST_CASE("Test functools", "[functools]")
 {
-    vector<int> src{1,2,3,4,5};
-    int res = eda_core::foldl(src,eda_core::Folders<int>::plus);
-    REQUIRE(res==15);
+    vector<int> src{1, 2, 3, 4, 5};
+    int res = eda_core::foldl(src, eda_core::Folders<int>::plus);
+    REQUIRE(res == 15);
 
     vector<string> str_vec{"1", "2", "3", "4", "5"};
     string str_res = eda_core::foldl(str_vec, eda_core::Folders<string>::plus);
