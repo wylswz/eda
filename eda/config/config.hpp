@@ -17,6 +17,7 @@ namespace eda_config
     {
     private:
         vector<string> etcd_eps;
+        bool initialized = false;
 
     public:
         /**

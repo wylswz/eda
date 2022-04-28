@@ -24,6 +24,9 @@ namespace eda_config
 
     string Config::EtcdEPs()
     {
+        if (!initialized) {
+            init();
+        }
         return eda_core::foldl(this->etcd_eps, eda_core::Folders<string>::plus);
     }
 
@@ -32,7 +35,7 @@ namespace eda_config
     {
         try {
             eda_core::Y_Object config = eda_core::parse_yaml(CONFIG_PATH);
-
+            this->etcd_eps = extract_etcd_eps(config);
         } catch (eda_core::EDA_Exception e) {
             if (e.is(ERR_FILE_NOT_EXISTS)) {
                 // Config file is not found, using default endpoint
@@ -41,6 +44,7 @@ namespace eda_config
                 throw e;
             }
         }
+        initialized = true;
     }
 
     Config::Config() noexcept: etcd_eps{}

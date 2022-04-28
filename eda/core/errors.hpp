@@ -10,6 +10,8 @@
 
 #define ERR_FILE_NOT_EXISTS 20010
 
+#define ERR_ILLEGAL_STATE 20020
+
 #include <string>
 using namespace std;
 
@@ -37,7 +39,14 @@ namespace eda_core
         bool is(int err_code) {
             return this->code == err_code;
         }
+
+        string repr() {
+            return "[EDA_Exception]: " + desc;
+        }
     };
+
+
+
 
 }
 

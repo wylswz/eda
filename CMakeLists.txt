@@ -23,6 +23,9 @@ add_library(config ./eda/config/config.cpp)
 target_include_directories(config PUBLIC
     ${PROJECT_SOURCE_DIR}
 )
+target_link_libraries(config
+    config_parser
+)
 
 
 # add the executable
