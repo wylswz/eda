@@ -8,6 +8,8 @@
 #define ERR_IDX_OUT_OF_BOUND 20000
 #define UNINITIALIZED_ACCESS 20001
 
+#define ERR_FILE_NOT_EXISTS 20010
+
 #include <string>
 using namespace std;
 

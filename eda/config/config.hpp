@@ -1,6 +1,7 @@
-#pragma once
-#include <stdlib.h>
-#include <string>
+#ifndef EDA_CONFIG_H
+#define EDA_CONFIG_H
+
+#include "eda/core/std.h"
 
 #define ENV_ETCD_EPS "ETCD_EPS"
 
@@ -11,12 +12,20 @@ namespace eda_config
     class Config
     {
     private:
-        string etcd_eps;
+        vector<string> etcd_eps;
+
     public:
+        /**
+         * @brief etcd endpoints separated by comma
+         *
+         * @return string
+         */
         string EtcdEPs();
-        Config();
+        void init();
+        Config() noexcept;
         ~Config();
     };
-    
+
 }
 
+#endif

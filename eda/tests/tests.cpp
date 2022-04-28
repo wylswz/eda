@@ -7,9 +7,21 @@
 #include "eda/tests/test_utils.hpp"
 #include "eda/core/eda_type_traits.h"
 #include "eda/core/config_parser.h"
+#include "eda/core/functools.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 using namespace std;
+
+TEST_CASE("Test functools", "[functools]")
+{
+    vector<int> src{1,2,3,4,5};
+    int res = eda_core::foldl(src,eda_core::Folders<int>::plus);
+    REQUIRE(res==15);
+
+    vector<string> str_vec{"1", "2", "3", "4", "5"};
+    string str_res = eda_core::foldl(str_vec, eda_core::Folders<string>::plus);
+    REQUIRE(str_res == "12345");
+}
 
 TEST_CASE("Test path parser", "[pathparser]")
 {
@@ -87,7 +99,8 @@ TEST_CASE("Test type trait", "[Type_trait]")
     REQUIRE(eda_core::p_instance_of<eda_core::Y_Map>(p.get()));
 }
 
-TEST_CASE("Test Y_Map", "[Y_Map]") {
+TEST_CASE("Test Y_Map", "[Y_Map]")
+{
     using namespace eda_core;
     Y_Object yo;
     Y_Map ymap(std::move(yo));
@@ -122,13 +135,13 @@ TEST_CASE("Test yaml parsing", "[Yaml parsing]")
     REQUIRE(b->map["b3"].get()->map.size() == 2);
 }
 
-
-TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]") {
+TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]")
+{
     eda_core::Y_Object yo;
     yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/maplist.yaml"));
     eda_core::Y_Map a{*yo.map["a"]};
     eda_core::Y_Seq b{*a.get("b").get()};
-    
+
     eda_core::Y_Map b0{*b[0].get()};
     eda_core::Y_Map b1{*b[1].get()};
     eda_core::Y_Map b2{*b[2].get()};
@@ -136,10 +149,10 @@ TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]") {
     REQUIRE(b0.get("c").get()->token == "1");
     REQUIRE(b1.get("d").get()->token == "2");
     REQUIRE(b2.get("e").get()->map["f"].get()->map["g"].get()->token == "3");
-
 }
 
-TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]") {
+TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]")
+{
     eda_core::Y_Object yo;
     yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list.yaml"));
     eda_core::Y_Seq s{yo};

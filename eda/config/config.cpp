@@ -1,17 +1,29 @@
+#include "eda/core/config_parser.h"
+#include "eda/core/functools.hpp"
 #include "eda/config/config.hpp"
-#include<iostream>
-#include<yaml.h>
+#include "eda/core/std.h"
+#include <functional>
+
+#define CONFIG_PATH "/etc/xmbsmdsj/eda/config.yaml"
+
 using namespace std;
 
+namespace eda_config
+{
 
-namespace eda_config {
-    string Config::EtcdEPs() {
-        return "http://127.0.0.1:2380";
+    string Config::EtcdEPs()
+    {
+        return eda_core::foldl(this->etcd_eps, eda_core::Folders<string>::plus);
     }
 
-    Config::Config(): etcd_eps() {
-
+    void Config::init()
+    {
+        eda_core::Y_Object config = eda_core::parse_yaml(CONFIG_PATH);
     }
+
+    Config::Config() noexcept: etcd_eps{}
+    {
+    };
 
     Config::~Config() = default;
 
