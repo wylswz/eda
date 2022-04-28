@@ -39,6 +39,7 @@ namespace eda_core
 
     template<typename T>
     function<T(T const&, T const&)> Folders<T>::plus = [](T const& t1, T const& t2) {return t1 + t2;};
+
 }
 
 #endif

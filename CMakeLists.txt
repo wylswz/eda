@@ -71,7 +71,8 @@ add_executable(testcase ${PROJECT_SOURCE_DIR}/eda/tests/tests.cpp)
 target_link_libraries(testcase 
     PRIVATE Catch2::Catch2WithMain
     vfs
-    config_parser)
+    config_parser
+    config)
 target_include_directories(testcase PUBLIC
     ${PROJECT_SOURCE_DIR}
 )

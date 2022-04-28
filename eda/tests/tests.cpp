@@ -7,6 +7,7 @@
 #include "eda/tests/test_utils.hpp"
 #include "eda/core/eda_type_traits.h"
 #include "eda/core/config_parser.h"
+#include "eda/config/config.hpp"
 #include "eda/core/functools.hpp"
 #include <catch2/catch_test_macros.hpp>
 
@@ -43,7 +44,7 @@ TEST_CASE("Test path parser", "[pathparser]")
     REQUIRE(p.has_next() == false);
 
     p = eda_path::P_Parser("/a");
-    REQUIRE_THROWS_AS(p.peek(), eda::EDA_Exception);
+    REQUIRE_THROWS_AS(p.peek(), eda_core::EDA_Exception);
 }
 
 TEST_CASE("Test Path Tree Node", "[path_tree_node]")
@@ -164,4 +165,25 @@ TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]")
     eda_core::Y_Seq s{yo};
     REQUIRE(s.seq.size() == 4);
     REQUIRE(s.seq[3].get()->map["a"].get()->token == "4");
+}
+
+TEST_CASE("Test file not exists", "[Yaml not exist]")
+{
+    try {
+        eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list123easdzxc.yaml"));
+
+    } catch(eda_core::EDA_Exception e) {
+        REQUIRE(e.is(ERR_FILE_NOT_EXISTS));
+    }
+}
+
+TEST_CASE("Test extract eps", "Test extract eps") {
+    eda_core::Y_Map yo{};
+    eda_core::Y_Seq lst{};
+    auto putted = yo.put("etcd-endpoints", lst);
+    putted->seq.push_back(make_shared<eda_core::Y_String>(eda_core::Y_String{"1.1.1.1"}));
+    putted->seq.push_back(make_shared<eda_core::Y_String>(eda_core::Y_String{"2.2.2.2"}));
+
+    vector<string> res = eda_config::extract_etcd_eps(yo);
+    REQUIRE(res == vector<string> {"1.1.1.1", "2.2.2.2"});
 }

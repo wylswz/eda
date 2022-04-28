@@ -13,7 +13,7 @@
 #include <string>
 using namespace std;
 
-namespace eda
+namespace eda_core
 {
     /**
      * @brief This is the base class for all eda exceptions
@@ -33,6 +33,10 @@ namespace eda
         }
 
         ~EDA_Exception() = default;
+
+        bool is(int err_code) {
+            return this->code == err_code;
+        }
     };
 
 }

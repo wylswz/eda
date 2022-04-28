@@ -22,7 +22,7 @@ namespace eda {
         
         cout<<r.value().as_string()<<endl;
         if (!r.is_ok()) {
-            throw EDA_Exception(ERR_ETCD_ERR, r.error_message());
+            throw eda_core::EDA_Exception(ERR_ETCD_ERR, r.error_message());
         }
         return r.keys();
     }

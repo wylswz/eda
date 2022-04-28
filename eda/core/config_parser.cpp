@@ -94,7 +94,7 @@ namespace eda_core
         FILE *input = fopen(path, "rb");
         if (!input)
         {
-            throw eda::EDA_Exception(ERR_FILE_NOT_EXISTS, "File does not exists");
+            throw eda_core::EDA_Exception(ERR_FILE_NOT_EXISTS, "File does not exists");
         }
         yaml_parser_t parser;
         yaml_event_t event;

@@ -29,7 +29,7 @@ namespace eda_path {
             if (this->_can_peek) {
                 return this->current_token;
             }
-            throw eda::EDA_Exception(UNINITIALIZED_ACCESS, "Cannot peed a parser before first next() invocation");
+            throw eda_core::EDA_Exception(UNINITIALIZED_ACCESS, "Cannot peed a parser before first next() invocation");
         }
 
         const string& next() {
