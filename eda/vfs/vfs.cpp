@@ -14,7 +14,8 @@ namespace eda_vfs
     {
     }
 
-    shared_ptr<Path_Tree_Node> Path_Tree_Node::get_handle() {
+    shared_ptr<Path_Tree_Node> Path_Tree_Node::get_handle()
+    {
         return this->shared_from_this();
     }
 
@@ -116,11 +117,15 @@ namespace eda_vfs
                     return nullptr;
                 }
             }
-            catch(eda_core::EDA_Exception const &e) {
-                if (e.is(ERR_UNINITIALIZED_ACCESS)) {
+            catch (eda_core::EDA_Exception const &e)
+            {
+                if (e.is(ERR_UNINITIALIZED_ACCESS))
+                {
                     // Finding root node
                     return node->get_handle();
-                } else {
+                }
+                else
+                {
                     return nullptr;
                 }
             }
@@ -129,8 +134,8 @@ namespace eda_vfs
 
     /**
      * @brief Find the node given corresponding path
-     * 
-     * @param path 
+     *
+     * @param path
      * @return shared_ptr<Path_Tree_Node> nullptr if not found
      */
     shared_ptr<Path_Tree_Node> Path_Tree_Node::find_path(string const &path)

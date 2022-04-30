@@ -101,7 +101,6 @@ TEST_CASE("Test insert path", "[insert_path]")
 
     node = root->find_path("/a/b/c/e");
     REQUIRE(node == nullptr);
-
 }
 
 TEST_CASE("Test type trait", "[Type_trait]")
@@ -181,15 +180,18 @@ TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]")
 
 TEST_CASE("Test file not exists", "[Yaml not exist]")
 {
-    try {
+    try
+    {
         eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list123easdzxc.yaml"));
-
-    } catch(eda_core::EDA_Exception e) {
+    }
+    catch (eda_core::EDA_Exception e)
+    {
         REQUIRE(e.is(ERR_FILE_NOT_EXISTS));
     }
 }
 
-TEST_CASE("Test extract eps", "Test extract eps") {
+TEST_CASE("Test extract eps", "Test extract eps")
+{
     eda_core::Y_Map yo{};
     eda_core::Y_Seq lst{};
     auto putted = yo.put("etcd-endpoints", lst);
@@ -197,5 +199,5 @@ TEST_CASE("Test extract eps", "Test extract eps") {
     putted->seq.push_back(make_shared<eda_core::Y_String>(eda_core::Y_String{"2.2.2.2"}));
 
     vector<string> res = eda_config::extract_etcd_eps(yo);
-    REQUIRE(res == vector<string> {"1.1.1.1", "2.2.2.2"});
+    REQUIRE(res == vector<string>{"1.1.1.1", "2.2.2.2"});
 }

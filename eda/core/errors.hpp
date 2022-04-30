@@ -36,17 +36,16 @@ namespace eda_core
 
         ~EDA_Exception() = default;
 
-        bool is(int err_code) const {
+        bool is(int err_code) const
+        {
             return this->code == err_code;
         }
 
-        string repr() {
+        string repr()
+        {
             return "[EDA_Exception]: " + desc;
         }
     };
-
-
-
 
 }
 

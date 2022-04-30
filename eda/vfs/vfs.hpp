@@ -19,8 +19,19 @@ namespace eda_vfs
         Key(string key_str, bool is_dir);
     };
 
-    class Path_Tree_Node: public enable_shared_from_this<Path_Tree_Node>
+    class Path_Tree_Node : public enable_shared_from_this<Path_Tree_Node>
     {
+
+    private:
+        /**
+         * @brief Always use Create(...) method to create objects
+         * 
+         */
+        Path_Tree_Node();
+
+        Path_Tree_Node(string const &token);
+
+        Path_Tree_Node(string const &token, Path_Tree_Node &parent);
 #ifdef UNITTEST
     public:
 #else
@@ -31,34 +42,28 @@ namespace eda_vfs
         vector<shared_ptr<Path_Tree_Node>> children;
         Path_Tree_Node *parent;
 
-        Path_Tree_Node();
-
-        Path_Tree_Node(string const &token);
-
-        Path_Tree_Node(string const &token, Path_Tree_Node &parent);
-
     public:
-
-        static shared_ptr<Path_Tree_Node> Create() {
+        static shared_ptr<Path_Tree_Node> Create()
+        {
             return make_shared<Path_Tree_Node>(Path_Tree_Node());
         }
 
-        static shared_ptr<Path_Tree_Node> Create(string const &token) {
+        static shared_ptr<Path_Tree_Node> Create(string const &token)
+        {
             return make_shared<Path_Tree_Node>(Path_Tree_Node(token));
         }
 
-        static shared_ptr<Path_Tree_Node> Create(string const &token, Path_Tree_Node &parent) {
+        static shared_ptr<Path_Tree_Node> Create(string const &token, Path_Tree_Node &parent)
+        {
             return make_shared<Path_Tree_Node>(Path_Tree_Node(token, parent));
         }
 
         /**
          * @brief Get the handle of this object
-         * 
-         * @return shared_ptr<Path_Tree_Node> 
+         *
+         * @return shared_ptr<Path_Tree_Node>
          */
         shared_ptr<Path_Tree_Node> get_handle();
-
-
 
         Path_Tree_Node(Path_Tree_Node const &that) noexcept;
 
@@ -77,11 +82,11 @@ namespace eda_vfs
 
         /**
          * @brief Find the corresponding node in path tree given path
-         * 
-         * @param path 
+         *
+         * @param path
          * @return Path_Tree_Node& NULL_PATH_NODE if not exists, or else return a reference
          */
-        shared_ptr<Path_Tree_Node> find_path(string const& path);
+        shared_ptr<Path_Tree_Node> find_path(string const &path);
 
         Path_Tree_Node *get_parent();
 
