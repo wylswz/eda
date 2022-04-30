@@ -15,9 +15,7 @@
 using namespace std;
 
 /*
-    操他妈死逼的还要封到什么时候
-    每天他妈操逼的核酸核酸，除了核酸就只会满嘴喷屎
-    王八蛋，全家死光光
+    他妈的还要封到什么时候
 */
 
 TEST_CASE("Test functools", "[functools]")
