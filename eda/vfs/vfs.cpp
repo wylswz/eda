@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace eda
+namespace eda_vfs
 {
 
     Key::Key(): key_str{}, is_dir{false} {}
@@ -18,7 +18,7 @@ namespace eda
      * @brief Indicates null node
      *
      */
-    Path_Tree_Node NULL_PATH_NODE(".!~");
+    Path_Tree_Node const NULL_PATH_NODE = Path_Tree_Node(".!~");
 
     /**
      * @brief Construct a root node
@@ -81,16 +81,16 @@ namespace eda
         return this->parent;
     }
 
-    Path_Tree_Node &Path_Tree_Node::find(string const &child_token)
+    shared_ptr<Path_Tree_Node> Path_Tree_Node::find(string const &child_token)
     {
         for (auto &c : this->children)
         {
-            if (c.token == child_token)
+            if (c->token == child_token)
             {
                 return c;
             }
         }
-        return NULL_PATH_NODE;
+        return nullptr;
     }
 
     bool Path_Tree_Node::is_null_node()
@@ -100,9 +100,9 @@ namespace eda
 
     void Path_Tree_Node::insert_child(Path_Tree_Node &child)
     {
-        if (this->find(child.token).is_null_node())
+        if (this->find(child.token) == nullptr)
         {
-            this->children.push_back(child);
+            this->children.push_back(make_shared<Path_Tree_Node>(child));
             child.parent = this;
         }
     }
@@ -118,24 +118,24 @@ namespace eda
      * @param p
      * @param node
      */
-    void _do_insert(eda_path::P_Parser p, Path_Tree_Node &into)
+    void _do_insert(eda_path::P_Parser p, Path_Tree_Node* into)
     {
         if (p.has_next())
         {
             string token = p.next();
             Path_Tree_Node node(token);
-            Path_Tree_Node &child = into.find(token);
+            shared_ptr<Path_Tree_Node> child = into->find(token);
 
-            if (child.is_null_node())
+            if (child == nullptr)
             {
                 // Not found
                 // Create a child and insert if not exists
                 Path_Tree_Node _tmp(token);
-                into.insert_child(_tmp);
+                into->insert_child(_tmp);
                 // Need to find again because
-                return _do_insert(p, into.find(token));
+                return _do_insert(p, into->find(token).get());
             }
-            return _do_insert(p, child);
+            return _do_insert(p, child.get());
         }
         else
         {
@@ -146,7 +146,11 @@ namespace eda
     void Path_Tree_Node::insert_path(string const &path)
     {
         eda_path::P_Parser p(path);
-        _do_insert(p, *this);
+        _do_insert(p, this);
+    }
+
+    shared_ptr<Path_Tree_Node> Path_Tree_Node::find_path(string const &path) {
+        return nullptr;
     }
 
     string Path_Tree_Node::get_token() {
@@ -154,17 +158,17 @@ namespace eda
     }
 
     vector<string> Path_Tree_Node::list_children_token() {
-        function<string (eda::Path_Tree_Node&)> token_getter = [](Path_Tree_Node& n) {return n.get_token();};
-        return eda_core::map_to(this->children, token_getter);
+        function<string (shared_ptr<Path_Tree_Node>)> token_getter = [](shared_ptr<Path_Tree_Node> n) {return n->get_token();};
+        return eda_core::map_to<shared_ptr<Path_Tree_Node>, string>(this->children, token_getter);
     }
 
-    vector<Path_Tree_Node> Path_Tree_Node::list_children() {
+    vector<shared_ptr<Path_Tree_Node>> Path_Tree_Node::list_children() {
         return this->children;
     }
 
 }
 
-namespace eda
+namespace eda_vfs
 {
     VFS::VFS() : etcd_op{}
     {
@@ -195,11 +199,11 @@ namespace eda
         // todo: get prefix from context
         vector<string> keys = this->etcd_op.list("/");
         Path_Tree_Node n = construct_path_tree(keys);
-        function<Key (Path_Tree_Node&)> mapper = [](Path_Tree_Node& n) {
-            Key k(n.get_token(), n.list_children().size() > 0);
+        function<Key (shared_ptr<Path_Tree_Node>)> mapper = [](shared_ptr<Path_Tree_Node> n) {
+            Key k(n->get_token(), n->list_children().size() > 0);
             return k;
         };
-        return eda_core::map_to(n.list_children(), mapper);
+        return eda_core::map_to<shared_ptr<Path_Tree_Node>, Key>(n.list_children(), mapper);
     }
 
     bool VFS::is_dir(string const &s)

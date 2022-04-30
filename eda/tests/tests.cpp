@@ -51,45 +51,47 @@ TEST_CASE("Test path parser", "[pathparser]")
 TEST_CASE("Test Path Tree Node", "[path_tree_node]")
 {
     // Test constructor
-    eda::Path_Tree_Node n("token");
+    eda_vfs::Path_Tree_Node n("token");
     REQUIRE(n.get_parent() == nullptr);
 
-    eda::Path_Tree_Node parent("root");
-    eda::Path_Tree_Node child_1("asd");
-    eda::Path_Tree_Node child_2("zxc");
+    eda_vfs::Path_Tree_Node parent("root");
+    eda_vfs::Path_Tree_Node child_1("asd");
+    eda_vfs::Path_Tree_Node child_2("zxc");
 
-    eda::Path_Tree_Node n2("token", parent);
+    eda_vfs::Path_Tree_Node n2("token", parent);
 
     // Test copy constructor
-    eda::Path_Tree_Node n3 = n2;
+    eda_vfs::Path_Tree_Node n3 = n2;
     REQUIRE(n3.get_parent() == n2.get_parent());
 
-    eda::Path_Tree_Node n3c("n3c");
+    eda_vfs::Path_Tree_Node n3c("n3c");
     n3.insert_child(n3c);
 
     cout << n3.children.size() << "|" << n2.children.size() << endl;
 
-    eda::Path_Tree_Node &n3c_find = n3.find("n3c");
-    REQUIRE(!n3c_find.is_null_node());
+    weak_ptr<eda_vfs::Path_Tree_Node> n3c_find = n3.find("n3c");
+    REQUIRE(n3c_find.lock());
 
     n3c_find = n2.find("n3c");
-    REQUIRE(n3c_find.is_null_node());
+    REQUIRE(!n3c_find.lock());
 }
 
 TEST_CASE("Test insert path", "[insert_path]")
 {
-    eda::Path_Tree_Node root;
-    root.insert_path("/a/b/c");
-    root.insert_path("/a/b/d");
-    root.insert_path("/");
-    vector<string> l1 = root.list_children_token();
+    eda_vfs::Path_Tree_Node* root = new eda_vfs::Path_Tree_Node();
+    root->insert_path("/a/b/c");
+    root->insert_path("/a/b/d");
+    root->insert_path("/");
+    vector<string> l1 = root->list_children_token();
     REQUIRE(l1 == vector<string>{"a"});
 
-    vector<string> l2 = root.children[0].list_children_token();
+    vector<string> l2 = root->children[0]->list_children_token();
     REQUIRE(l2 == vector<string>{"b"});
 
-    vector<string> l3 = root.children[0].children[0].list_children_token();
+    vector<string> l3 = root->children[0]->children[0]->list_children_token();
     REQUIRE(l3 == vector<string>{"c", "d"});
+
+    delete root;
 }
 
 TEST_CASE("Test type trait", "[Type_trait]")

@@ -8,7 +8,7 @@
 
 using namespace std;
 
-namespace eda
+namespace eda_vfs
 {
     struct Key
     {
@@ -28,10 +28,11 @@ namespace eda
 #endif
         string token;
         bool root;
-        vector<Path_Tree_Node> children;
+        vector<shared_ptr<Path_Tree_Node>> children;
         Path_Tree_Node *parent;
 
     public:
+
         Path_Tree_Node();
 
         Path_Tree_Node(string const &token);
@@ -53,9 +54,17 @@ namespace eda
          */
         void insert_path(string const &path);
 
+        /**
+         * @brief Find the corresponding node in path tree given path
+         * 
+         * @param path 
+         * @return Path_Tree_Node& NULL_PATH_NODE if not exists, or else return a reference
+         */
+        shared_ptr<Path_Tree_Node> find_path(string const& path);
+
         Path_Tree_Node *get_parent();
 
-        Path_Tree_Node &find(string const &child_token);
+        shared_ptr<Path_Tree_Node> find(string const &child_token);
 
         void insert_child(Path_Tree_Node &child);
 
@@ -63,7 +72,7 @@ namespace eda
 
         vector<string> list_children_token();
 
-        vector<Path_Tree_Node> list_children();
+        vector<shared_ptr<Path_Tree_Node>> list_children();
 
         string get_token();
     };
@@ -71,7 +80,7 @@ namespace eda
     class VFS
     {
     private:
-        ETCD_Op etcd_op;
+        eda::ETCD_Op etcd_op;
 
     public:
         VFS();

@@ -5,8 +5,8 @@ int main(int argc, char **argv)
 
     try
     {
-        eda::VFS vfs;
-        vector<eda::Key> ks = vfs.ls();
+        eda_vfs::VFS vfs;
+        vector<eda_vfs::Key> ks = vfs.ls();
         for (auto const &k : ks)
         {
             cout << k.key_str << endl;
