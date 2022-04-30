@@ -6,7 +6,7 @@
 #define ERR_ETCD_ERR 10001
 
 #define ERR_IDX_OUT_OF_BOUND 20000
-#define UNINITIALIZED_ACCESS 20001
+#define ERR_UNINITIALIZED_ACCESS 20001
 
 #define ERR_FILE_NOT_EXISTS 20010
 
@@ -36,7 +36,7 @@ namespace eda_core
 
         ~EDA_Exception() = default;
 
-        bool is(int err_code) {
+        bool is(int err_code) const {
             return this->code == err_code;
         }
 

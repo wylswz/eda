@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace eda_path {
+namespace eda_vfs {
 
     class P_Parser {
         private:
@@ -17,8 +17,7 @@ namespace eda_path {
 
         public:
         P_Parser(string const& str): 
-        str{str}, current_token{}{
-            current = 1;
+        str{str}, current_token{}, current{1}, _can_peek{false}{
         }
 
         bool has_next() {
@@ -29,7 +28,7 @@ namespace eda_path {
             if (this->_can_peek) {
                 return this->current_token;
             }
-            throw eda_core::EDA_Exception(UNINITIALIZED_ACCESS, "Cannot peek a parser before first next() invocation");
+            throw eda_core::EDA_Exception(ERR_UNINITIALIZED_ACCESS, "Cannot peek a parser before first next() invocation");
         }
 
         const string& next() {

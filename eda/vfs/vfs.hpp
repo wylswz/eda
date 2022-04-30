@@ -19,7 +19,7 @@ namespace eda_vfs
         Key(string key_str, bool is_dir);
     };
 
-    class Path_Tree_Node
+    class Path_Tree_Node: public enable_shared_from_this<Path_Tree_Node>
     {
 #ifdef UNITTEST
     public:
@@ -31,13 +31,34 @@ namespace eda_vfs
         vector<shared_ptr<Path_Tree_Node>> children;
         Path_Tree_Node *parent;
 
-    public:
-
         Path_Tree_Node();
 
         Path_Tree_Node(string const &token);
 
         Path_Tree_Node(string const &token, Path_Tree_Node &parent);
+
+    public:
+
+        static shared_ptr<Path_Tree_Node> Create() {
+            return make_shared<Path_Tree_Node>(Path_Tree_Node());
+        }
+
+        static shared_ptr<Path_Tree_Node> Create(string const &token) {
+            return make_shared<Path_Tree_Node>(Path_Tree_Node(token));
+        }
+
+        static shared_ptr<Path_Tree_Node> Create(string const &token, Path_Tree_Node &parent) {
+            return make_shared<Path_Tree_Node>(Path_Tree_Node(token, parent));
+        }
+
+        /**
+         * @brief Get the handle of this object
+         * 
+         * @return shared_ptr<Path_Tree_Node> 
+         */
+        shared_ptr<Path_Tree_Node> get_handle();
+
+
 
         Path_Tree_Node(Path_Tree_Node const &that) noexcept;
 
@@ -66,7 +87,7 @@ namespace eda_vfs
 
         shared_ptr<Path_Tree_Node> find(string const &child_token);
 
-        void insert_child(Path_Tree_Node &child);
+        void insert_child(shared_ptr<Path_Tree_Node> child);
 
         bool is_null_node();
 

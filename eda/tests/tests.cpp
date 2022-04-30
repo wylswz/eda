@@ -33,7 +33,7 @@ TEST_CASE("Test functools", "[functools]")
 
 TEST_CASE("Test path parser", "[pathparser]")
 {
-    eda_path::P_Parser p("/a/b/c");
+    eda_vfs::P_Parser p("/a/b/c");
 
     REQUIRE(p.has_next() == true);
     REQUIRE(p.next() == "a");
@@ -41,44 +41,44 @@ TEST_CASE("Test path parser", "[pathparser]")
     REQUIRE(p.next() == "c");
     REQUIRE(p.has_next() == false);
 
-    p = eda_path::P_Parser("/");
+    p = eda_vfs::P_Parser("/");
     REQUIRE(p.has_next() == false);
 
-    p = eda_path::P_Parser("/a");
+    p = eda_vfs::P_Parser("/a");
     REQUIRE_THROWS_AS(p.peek(), eda_core::EDA_Exception);
 }
 
 TEST_CASE("Test Path Tree Node", "[path_tree_node]")
 {
     // Test constructor
-    eda_vfs::Path_Tree_Node n("token");
-    REQUIRE(n.get_parent() == nullptr);
+    auto n = eda_vfs::Path_Tree_Node::Create("token");
+    REQUIRE(n->get_parent() == nullptr);
 
-    eda_vfs::Path_Tree_Node parent("root");
-    eda_vfs::Path_Tree_Node child_1("asd");
-    eda_vfs::Path_Tree_Node child_2("zxc");
+    auto parent = eda_vfs::Path_Tree_Node::Create("root");
+    auto child_1 = eda_vfs::Path_Tree_Node::Create("asd");
+    auto child_2 = eda_vfs::Path_Tree_Node::Create("zxc");
 
-    eda_vfs::Path_Tree_Node n2("token", parent);
+    auto n2 = eda_vfs::Path_Tree_Node::Create("token", *parent);
 
     // Test copy constructor
-    eda_vfs::Path_Tree_Node n3 = n2;
-    REQUIRE(n3.get_parent() == n2.get_parent());
+    eda_vfs::Path_Tree_Node n3 = *n2;
+    REQUIRE(n3.get_parent() == n2->get_parent());
 
-    eda_vfs::Path_Tree_Node n3c("n3c");
+    auto n3c = eda_vfs::Path_Tree_Node::Create("n3c");
     n3.insert_child(n3c);
 
-    cout << n3.children.size() << "|" << n2.children.size() << endl;
+    cout << n3.children.size() << "|" << n2->children.size() << endl;
 
     weak_ptr<eda_vfs::Path_Tree_Node> n3c_find = n3.find("n3c");
     REQUIRE(n3c_find.lock());
 
-    n3c_find = n2.find("n3c");
+    n3c_find = n2->find("n3c");
     REQUIRE(!n3c_find.lock());
 }
 
 TEST_CASE("Test insert path", "[insert_path]")
 {
-    eda_vfs::Path_Tree_Node* root = new eda_vfs::Path_Tree_Node();
+    auto root = eda_vfs::Path_Tree_Node::Create();
     root->insert_path("/a/b/c");
     root->insert_path("/a/b/d");
     root->insert_path("/");
@@ -91,7 +91,17 @@ TEST_CASE("Test insert path", "[insert_path]")
     vector<string> l3 = root->children[0]->children[0]->list_children_token();
     REQUIRE(l3 == vector<string>{"c", "d"});
 
-    delete root;
+    // Test find path
+    shared_ptr<eda_vfs::Path_Tree_Node> node = root->find_path("/a/b/c");
+    REQUIRE(node->token == "c");
+    node = root->find_path("/a/b/d");
+    REQUIRE(node->token == "d");
+    node = root->find_path("/");
+    REQUIRE(node->root);
+
+    node = root->find_path("/a/b/c/e");
+    REQUIRE(node == nullptr);
+
 }
 
 TEST_CASE("Test type trait", "[Type_trait]")
