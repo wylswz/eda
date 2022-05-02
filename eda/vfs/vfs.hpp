@@ -107,9 +107,10 @@ namespace eda_vfs
     {
     private:
         eda::ETCD_Op etcd_op;
+        string _pwd;
 
     public:
-        VFS();
+        VFS(eda::ETCD_Op etcd_op);
         ~VFS();
         vector<Key> ls();
         string pwd();

@@ -9,9 +9,11 @@ namespace eda {
     class ETCD_Op {
     private:
         etcd::Client client;
+        string etcd_ep;
 
     public:
-        ETCD_Op();
+        ETCD_Op(string const & etcd_ep);
+        ETCD_Op(ETCD_Op const & that);
         ~ETCD_Op();
         /**
          * @brief List all keys with prefix
@@ -21,8 +23,6 @@ namespace eda {
          */
         vector<string> list(string const & prefix);
     };
-
-
 
 }
 

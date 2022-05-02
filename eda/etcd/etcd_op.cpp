@@ -6,15 +6,20 @@
 using namespace std;
 
 namespace eda {
-    ETCD_Op::ETCD_Op():
-    client (eda_config::Config().EtcdEPs(), "pick_first")
+    ETCD_Op::ETCD_Op(string const &etcd_ep):
+    etcd_ep{etcd_ep},
+    client (etcd_ep, "pick_first")
     {
         cout<<"Using etcd: "<<eda_config::Config().EtcdEPs()<<endl;    
     }
 
-    ETCD_Op::~ETCD_Op() {
-    
-    };
+    ETCD_Op::ETCD_Op(ETCD_Op const& that): 
+    etcd_ep{that.etcd_ep},
+    client {etcd_ep, "pick_first"} {
+
+    }
+
+    ETCD_Op::~ETCD_Op() = default;
 
     vector<string> ETCD_Op::list(string const & prefix) {
         

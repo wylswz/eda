@@ -222,7 +222,7 @@ namespace eda_vfs
 
 namespace eda_vfs
 {
-    VFS::VFS() : etcd_op{}
+    VFS::VFS(eda::ETCD_Op etcd_op) : etcd_op{etcd_op}, _pwd{}
     {
     }
 
@@ -230,12 +230,14 @@ namespace eda_vfs
 
     string VFS::cd(string const &dir)
     {
-        throw(ERR_NOT_IMPLEMENTED);
+        // todo: support relative path semantics
+        this->_pwd = dir;
+        return this->_pwd;
     }
 
     string VFS::pwd()
     {
-        throw(ERR_NOT_IMPLEMENTED);
+        return this->_pwd;
     }
 
     shared_ptr<Path_Tree_Node> construct_path_tree(vector<string> path)
@@ -263,17 +265,23 @@ namespace eda_vfs
 
     bool VFS::is_dir(string const &s)
     {
-        throw(ERR_NOT_IMPLEMENTED);
+        vector<string> keys = this->etcd_op.list("/");
+        shared_ptr<Path_Tree_Node> n = construct_path_tree(keys);
+        shared_ptr<Path_Tree_Node> node = n->find_path(s);
+        return node->list_children().size() > 0;
     }
 
     bool VFS::is_file(string const &s)
     {
-        throw(ERR_NOT_IMPLEMENTED);
+        return true;
     }
 
     bool VFS::exists(string const &s)
     {
-        throw(ERR_NOT_IMPLEMENTED);
+        vector<string> keys = this->etcd_op.list("/");
+        shared_ptr<Path_Tree_Node> n = construct_path_tree(keys);
+        shared_ptr<Path_Tree_Node> node = n->find_path(s);
+        return  n != nullptr;
     }
 
 } // namespace eds
