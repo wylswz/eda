@@ -1,8 +1,7 @@
 #define UNITTEST
-#define concat(F, S) F S
+#define eda_test_concat(F, S) F S
 
 #include "eda/vfs/vfs.hpp"
-#include "eda/vfs/path.hpp"
 #include "eda/core/std.h"
 #include "eda/core/errors.hpp"
 #include "eda/tests/test_utils.hpp"
@@ -139,8 +138,8 @@ TEST_CASE("Test yaml parsing", "[Yaml parsing]")
 {
     eda_core::Y_Object yo;
 #ifdef TEST_ROOT
-    cout << concat(TEST_ROOT, "/test.yaml") << endl;
-    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/map.yaml"));
+    cout << eda_test_concat(TEST_ROOT, "/test.yaml") << endl;
+    yo = eda_core::parse_yaml(eda_test_concat(TEST_ROOT, "/yaml/map.yaml"));
 
 #endif
     REQUIRE(yo.map.size() == 2);
@@ -154,7 +153,7 @@ TEST_CASE("Test yaml parsing", "[Yaml parsing]")
 TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]")
 {
     eda_core::Y_Object yo;
-    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/maplist.yaml"));
+    yo = eda_core::parse_yaml(eda_test_concat(TEST_ROOT, "/yaml/maplist.yaml"));
     eda_core::Y_Map a{*yo.map["a"]};
     eda_core::Y_Seq b{*a.get("b").get()};
 
@@ -170,7 +169,7 @@ TEST_CASE("Test map list yaml parsing", "[Yaml parsing 2]")
 TEST_CASE("Test list yaml parsing", "[Yaml parsing 3]")
 {
     eda_core::Y_Object yo;
-    yo = eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list.yaml"));
+    yo = eda_core::parse_yaml(eda_test_concat(TEST_ROOT, "/yaml/list.yaml"));
     eda_core::Y_Seq s{yo};
     REQUIRE(s.seq.size() == 4);
     REQUIRE(s.seq[3].get()->map["a"].get()->token == "4");
@@ -180,7 +179,7 @@ TEST_CASE("Test file not exists", "[Yaml not exist]")
 {
     try
     {
-        eda_core::parse_yaml(concat(TEST_ROOT, "/yaml/list123easdzxc.yaml"));
+        eda_core::parse_yaml(eda_test_concat(TEST_ROOT, "/yaml/list123easdzxc.yaml"));
     }
     catch (eda_core::EDA_Exception e)
     {

@@ -9,6 +9,112 @@ using namespace std;
 namespace eda_vfs
 {
 
+    bool validate_absolute_path(string const &path)
+    {
+        throw eda_core::EDA_Exception(ERR_NOT_IMPLEMENTED, "");
+    }
+
+    bool validate_relative_path(string const &path)
+    {
+        throw eda_core::EDA_Exception(ERR_NOT_IMPLEMENTED, "");
+    }
+
+    string compute_absolute_path(string const &pwd, string const &relative_path)
+    {
+        throw eda_core::EDA_Exception(ERR_NOT_IMPLEMENTED, "");
+    }
+
+    string sanitize_path(string const &path)
+    {
+        return "";
+    }
+
+    P_Parser::P_Parser(string const &str) : str{str}, current_token{}, _can_peek{false}, _offset{0}, p{str}, it{p.begin()}, root_name{}, root_dir{}
+    {
+        if (p.has_root_name())
+        {
+            this->root_name = *it;
+            it++;
+            _offset++;
+        }
+        if (p.has_root_path())
+        {
+            this->root_dir = *it;
+            it++;
+            _offset++;
+        }
+    }
+
+    P_Parser::P_Parser(P_Parser const &that) : P_Parser(that.str)
+    {
+        this->current_token = that.current_token;
+        /* Need to copy offset and rewind iterator */
+        this->_offset = that._offset;
+        this->it = this->p.begin(); // Need to reset iterator
+        for (int i = 0; i < _offset; i++)
+        {
+            it++;
+        }
+    }
+
+    P_Parser &P_Parser::operator=(P_Parser const &that)
+    {
+        P_Parser tmp(that);
+        swap(this->str, tmp.str);
+        swap(this->current_token, tmp.current_token);
+        swap(this->_can_peek, tmp._can_peek);
+        swap(this->p, tmp.p);
+        swap(this->root_name, tmp.root_name);
+        swap(this->root_dir, tmp.root_dir);
+        swap(this->_offset, tmp._offset);
+        this->it = this->p.begin();
+        for (int i = 0; i < _offset; i++)
+        {
+            it++;
+        }
+        return *this;
+    }
+
+    bool P_Parser::has_next()
+    {
+        if (this->it == p.end())
+        {
+            return false;
+        }
+        else
+        {
+            // if missing filename, iterator before end() is ""
+            if (!(*this->it).empty())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    string const &P_Parser::peek()
+    {
+        if (this->_can_peek)
+        {
+            return this->current_token;
+        }
+        throw eda_core::EDA_Exception(ERR_UNINITIALIZED_ACCESS, "Cannot peek a parser before first next() invocation");
+    }
+
+    const string &P_Parser::next()
+    {
+
+        // Move the point forward to slash or pass the string boundary
+        this->current_token = *this->it;
+        it++;
+        _offset++;
+        this->_can_peek = true;
+        return this->current_token;
+    }
+
     Key::Key() : key_str{}, is_dir{false} {}
     Key::Key(string key_str, bool is_dir) : key_str{key_str}, is_dir{is_dir}
     {
@@ -281,7 +387,7 @@ namespace eda_vfs
         vector<string> keys = this->etcd_op.list("/");
         shared_ptr<Path_Tree_Node> n = construct_path_tree(keys);
         shared_ptr<Path_Tree_Node> node = n->find_path(s);
-        return  n != nullptr;
+        return n != nullptr;
     }
 
 } // namespace eds

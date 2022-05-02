@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 
 # set the project name
 project(EDA)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_BUILD_TYPE Debug)
+
 
 find_library(LIB_YAML yaml)
 find_library(CPPREST_LIB cpprest)
@@ -54,7 +57,10 @@ add_library(vfs ./eda/vfs/vfs.cpp)
 target_include_directories(vfs PUBLIC
     ${PROJECT_SOURCE_DIR}
 )
-target_link_libraries(vfs etcdop)
+target_link_libraries(vfs 
+    etcdop
+    stdc++fs
+)
 
 add_executable(eda ${PROJECT_SOURCE_DIR}/eda/main.cpp)
 
@@ -70,6 +76,7 @@ target_include_directories(eda PUBLIC
 
 # Test
 find_package(Catch2 3 REQUIRED)
+
 add_executable(testcase ${PROJECT_SOURCE_DIR}/eda/tests/tests.cpp)
 target_link_libraries(testcase 
     PRIVATE Catch2::Catch2WithMain
@@ -79,6 +86,7 @@ target_link_libraries(testcase
 target_include_directories(testcase PUBLIC
     ${PROJECT_SOURCE_DIR}
 )
+
 target_compile_definitions(testcase
     PRIVATE
     TEST_ROOT="${PROJECT_SOURCE_DIR}/eda/tests"
