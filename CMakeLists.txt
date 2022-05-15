@@ -6,20 +6,24 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_BUILD_TYPE Debug)
+set(Boost_NO_WARN_NEW_VERSIONS 1)
 
 
-find_library(LIB_YAML yaml)
-find_library(CPPREST_LIB cpprest)
 find_package(Boost REQUIRED COMPONENTS random system thread filesystem chrono atomic date_time regex)
+find_package(yaml CONFIG REQUIRED)
+find_package(cpprestsdk CONFIG REQUIRED)
 find_package(OpenSSL 1.0.0 REQUIRED)
-find_package(etcd-cpp-api)
+# Test
+
+find_package(etcd-cpp-api CONFIG REQUIRED)
+find_package(Catch2 CONFIG REQUIRED)
 
 
 add_library(config_parser ./eda/core/config_parser.cpp)
 target_include_directories(config_parser PUBLIC
     ${PROJECT_SOURCE_DIR}
 )
-target_link_libraries(config_parser ${LIB_YAML})
+target_link_libraries(config_parser yaml)
 
 
 add_library(config ./eda/config/config.cpp)
@@ -39,7 +43,7 @@ target_include_directories(etcdop PUBLIC
 target_link_libraries(etcdop
     config
     etcd-cpp-api
-    ${CPPREST_LIB}
+    cpprestsdk::cpprest
     Boost::boost
     Boost::random
     Boost::system
@@ -59,7 +63,6 @@ target_include_directories(vfs PUBLIC
 )
 target_link_libraries(vfs 
     etcdop
-    stdc++fs
 )
 
 add_executable(eda ${PROJECT_SOURCE_DIR}/eda/main.cpp)
@@ -74,12 +77,10 @@ target_include_directories(eda PUBLIC
 )
 
 
-# Test
-find_package(Catch2 3 REQUIRED)
 
 add_executable(testcase ${PROJECT_SOURCE_DIR}/eda/tests/tests.cpp)
 target_link_libraries(testcase 
-    PRIVATE Catch2::Catch2WithMain
+    PRIVATE Catch2::Catch2
     vfs
     config_parser
     config)

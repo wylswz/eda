@@ -108,7 +108,7 @@ namespace eda_vfs
     {
 
         // Move the point forward to slash or pass the string boundary
-        this->current_token = *this->it;
+        this->current_token = this->it->string();
         it++;
         _offset++;
         this->_can_peek = true;

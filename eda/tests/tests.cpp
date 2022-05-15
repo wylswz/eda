@@ -1,5 +1,6 @@
 #define UNITTEST
 #define eda_test_concat(F, S) F S
+#define CATCH_CONFIG_MAIN
 
 #include "eda/vfs/vfs.hpp"
 #include "eda/core/std.h"
@@ -9,7 +10,7 @@
 #include "eda/core/config_parser.h"
 #include "eda/config/config.hpp"
 #include "eda/core/functools.hpp"
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch.hpp>
 
 using namespace std;
 
